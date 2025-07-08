@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facilescrivere.it - Assistente per la Scrittura</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="logo">
+                <span class="logo-icon">✍️</span>
+                Facilescrivere.it
+            </h1>
+            <p class="tagline">Il tuo assistente personale per scrivere meglio</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Template Selection -->
+            <section class="template-section">
+                <h2>Scegli il tipo di documento</h2>
+                <div class="template-grid">
+                    {% for template_id, template_data in templates.items() %}
+                    <button class="template-button" onclick="loadTemplate('{{ template_id }}')">
+                        <span class="template-icon">{{ template_data.icon }}</span>
+                        <span class="template-name">{{ template_data.name }}</span>
+                    </button>
+                    {% endfor %}
+                    <button class="template-button" onclick="loadTemplate('custom')">
+                        <span class="template-icon">📝</span>
+                        <span class="template-name">Documento Vuoto</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Writing Area -->
+            <section class="writing-section">
+                <div class="writing-header">
+                    <h2>Area di Scrittura</h2>
+                    <div class="document-info">
+                        <input type="text" id="document-title" placeholder="Titolo del documento" class="title-input">
+                        <div class="stats">
+                            <span id="word-count">0 parole</span>
+                            <span id="char-count">0 caratteri</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="editor-container">
+                    <textarea id="text-editor" placeholder="Inizia a scrivere qui o seleziona un modello sopra..."></textarea>
+                    
+                    <!-- Suggestions Panel -->
+                    <div id="suggestions-panel" class="suggestions-panel">
+                        <h3>Suggerimenti</h3>
+                        <div id="suggestions-list"></div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="checkGrammar()">
+                        🔍 Controlla Testo
+                    </button>
+                    <button class="btn btn-secondary" onclick="saveDocument()">
+                        💾 Salva Documento
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportPDF()">
+                        📄 Esporta PDF
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearText()">
+                        🗑️ Pulisci Testo
+                    </button>
+                </div>
+            </section>
+
+            <!-- Personal Dictionary -->
+            <section class="dictionary-section">
+                <h2>Dizionario Personale</h2>
+                <div class="dictionary-controls">
+                    <input type="text" id="new-word" placeholder="Aggiungi una parola o frase">
+                    <select id="word-type">
+                        <option value="words">Parola</option>
+                        <option value="phrases">Frase</option>
+                    </select>
+                    <button class="btn btn-small" onclick="addToDictionary()">
+                        ➕ Aggiungi
+                    </button>
+                </div>
+                <div class="dictionary-content">
+                    <div class="dictionary-words">
+                        <h4>Le mie parole</h4>
+                        <ul id="user-words"></ul>
+                    </div>
+                    <div class="dictionary-phrases">
+                        <h4>Le mie frasi</h4>
+                        <ul id="user-phrases"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Help Section -->
+            <section class="help-section">
+                <h2>Guida Rapida</h2>
+                <div class="help-cards">
+                    <div class="help-card">
+                        <h3>Come iniziare</h3>
+                        <ol>
+                            <li>Scegli un modello di documento dalla sezione sopra</li>
+                            <li>Compila i campi indicati tra parentesi quadre [...]</li>
+                            <li>Clicca su "Controlla Testo" per ricevere suggerimenti</li>
+                            <li>Salva o esporta il tuo documento</li>
+                        </ol>
+                    </div>
+                    <div class="help-card">
+                        <h3>Suggerimenti per scrivere bene</h3>
+                        <ul>
+                            <li>Usa frasi semplici e chiare</li>
+                            <li>Evita parole troppo complicate</li>
+                            <li>Rileggi sempre il testo prima di inviarlo</li>
+                            <li>Usa i modelli come punto di partenza</li>
+                        </ul>
+                    </div>
+                    <div class="help-card">
+                        <h3>Linguaggio formale</h3>
+                        <ul>
+                            <li>Usa "Lei" invece di "tu"</li>
+                            <li>Evita abbreviazioni e slang</li>
+                            <li>Inizia con "Gentile Signore/Signora"</li>
+                            <li>Concludi con "Distinti saluti"</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Facilescrivere.it - Assistente per la scrittura facile e accessibile</p>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Sto controllando il testo...</p>
+    </div>
+
+    <!-- Success Message -->
+    <div id="success-message" class="message success-message">
+        <span id="success-text"></span>
+        <button onclick="hideMessage('success-message')">&times;</button>
+    </div>
+
+    <!-- Error Message -->
+    <div id="error-message" class="message error-message">
+        <span id="error-text"></span>
+        <button onclick="hideMessage('error-message')">&times;</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
