@@ -1,55 +1,52 @@
 {
-  "name": "@flaticon/flaticon-uicons",
-  "description": "Interface icons from Flaticon",
-  "version": "1.7.0",
-  "main": "index.js",
-  "types": "lib/index.d.ts",
+  "name": "business-dashboard-premium",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dashboard premium per attività commerciali",
+  "main": "src/index.tsx",
   "scripts": {
-    "ts-types": " tsc --emitDeclarationOnly --outDir lib",
-    "clean:css": "rimraf css",
-    "clean:svg": "rimraf svg",
-    "prebuild": "run-p clean:css clean:svg",
-    "build:css": "node ./esbuild.js",
-    "build:svg": "svgo -f ./src/uicons/svg -o svg",
-    "build": "run-p ts-types build:css build:svg",
-    "postinstall": "node license"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "react-scripts start"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/flaticon/flaticon-uicons"
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "chart.js": "^4.4.0",
+    "react-chartjs-2": "^5.2.0",
+    "date-fns": "^2.30.0",
+    "lucide-react": "^0.263.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.18.0",
+    "tailwindcss": "^3.3.0",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "keywords": [
-    "icons",
-    "icon pack",
-    "uicons",
-    "interface icons",
-    "iconfont",
-    "flaticon",
     "react",
-    "mobile",
-    "android",
-    "ios",
-    "font",
-    "bootstrap",
-    "figma",
-    "svg"
+    "typescript",
+    "dashboard",
+    "business",
+    "premium"
   ],
-  "author": "gCuadros",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/flaticon/flaticon-uicons/issues"
-  },
-  "homepage": "https://github.com/flaticon/flaticon-uicons#readme",
-  "devDependencies": {
-    "esbuild": "^0.14.5",
-    "esbuild-plugin-glob": "^1.0.3",
-    "npm-run-all": "^4.1.5",
-    "rimraf": "^3.0.2",
-    "svgo": "^2.8.0",
-    "typescript": "^4.5.4"
-  },
-  "optionalDependencies": {
-    "esbuild-linux-64": "^0.14.5"
-  },
-  "private": false
+  "author": "Business Platform Team"
 }
