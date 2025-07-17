@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionale Calendario Formatori</title>
+    
+    <!-- Google Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- Material Design Lite -->
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
+    <!-- Header -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header mdl-color--primary">
+            <div class="mdl-layout__header-row">
+                <span class="mdl-layout-title">
+                    <i class="material-icons">event</i>
+                    Gestionale Calendario Formatori
+                </span>
+                <div class="mdl-layout-spacer"></div>
+                <nav class="mdl-navigation mdl-layout--large-screen-only">
+                    <a class="mdl-navigation__link" href="#" id="menuCalendario">
+                        <i class="material-icons">calendar_today</i> Calendario
+                    </a>
+                    <a class="mdl-navigation__link" href="#" id="menuAuto">
+                        <i class="material-icons">directions_car</i> Auto Aziendale
+                    </a>
+                    <a class="mdl-navigation__link" href="#" id="menuRimborsi">
+                        <i class="material-icons">receipt</i> Rimborsi
+                    </a>
+                    <a class="mdl-navigation__link" href="#" id="menuAdmin" style="display: none;">
+                        <i class="material-icons">admin_panel_settings</i> Admin
+                    </a>
+                </nav>
+                <div class="user-info">
+                    <span id="userWelcome">Benvenuto, Utente</span>
+                    <button class="mdl-button mdl-js-button mdl-button--icon" id="userMenu">
+                        <i class="material-icons">account_circle</i>
+                    </button>
+                    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="userMenu">
+                        <li class="mdl-menu__item" id="profileBtn">
+                            <i class="material-icons">person</i> Profilo
+                        </li>
+                        <li class="mdl-menu__item" id="logoutBtn">
+                            <i class="material-icons">exit_to_app</i> Logout
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="mdl-layout__content">
+            <div class="container-fluid mt-4">
+                <!-- Login Modal -->
+                <div class="modal fade" id="loginModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="material-icons">login</i> Accesso
+                                </h5>
+                            </div>
+                            <div class="modal-body">
+                                <form id="loginForm">
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mb-3">
+                                        <input class="mdl-textfield__input" type="email" id="loginEmail" required>
+                                        <label class="mdl-textfield__label" for="loginEmail">Email</label>
+                                    </div>
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mb-3">
+                                        <input class="mdl-textfield__input" type="password" id="loginPassword" required>
+                                        <label class="mdl-textfield__label" for="loginPassword">Password</label>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="material-icons">login</i> Accedi
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Section -->
+                <div id="calendarSection" class="section-content">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card shadow-sm">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="material-icons">calendar_today</i> Calendario Eventi
+                                    </h5>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-outline-primary" id="addEventBtn">
+                                            <i class="material-icons">add</i> Nuovo Evento
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary" id="viewToggle">
+                                            <i class="material-icons">view_module</i> Vista
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="calendar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auto Aziendale Section -->
+                <div id="autoSection" class="section-content" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card shadow-sm">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="material-icons">directions_car</i> Calendario Auto Aziendale
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="autoCalendar"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="material-icons">add_circle</i> Nuova Prenotazione
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="autoReservationForm">
+                                        <div class="mb-3">
+                                            <label for="autoStartDate" class="form-label">Data Partenza</label>
+                                            <input type="datetime-local" class="form-control" id="autoStartDate" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="autoEndDate" class="form-label">Data Rientro</label>
+                                            <input type="datetime-local" class="form-control" id="autoEndDate" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="autoDestination" class="form-label">Destinazione</label>
+                                            <input type="text" class="form-control" id="autoDestination" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="autoNotes" class="form-label">Note</label>
+                                            <textarea class="form-control" id="autoNotes" rows="3"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="autoJustification" class="form-label">Giustificativo</label>
+                                            <input type="file" class="form-control" id="autoJustification" accept=".pdf,.jpg,.jpeg,.png">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="material-icons">save</i> Prenota Auto
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rimborsi Section -->
+                <div id="rimborsiSection" class="section-content" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card shadow-sm">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="material-icons">receipt</i> Le Mie Richieste di Rimborso
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Data</th>
+                                                    <th>Descrizione</th>
+                                                    <th>Importo</th>
+                                                    <th>Tipo</th>
+                                                    <th>Stato</th>
+                                                    <th>Azioni</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="rimborsiTableBody">
+                                                <!-- Popolato dinamicamente -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="material-icons">add_circle</i> Nuova Richiesta
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="rimborsoForm">
+                                        <div class="mb-3">
+                                            <label for="rimborsoDate" class="form-label">Data Spesa</label>
+                                            <input type="date" class="form-control" id="rimborsoDate" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="rimborsoDescription" class="form-label">Descrizione</label>
+                                            <textarea class="form-control" id="rimborsoDescription" rows="3" required></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="rimborsoAmount" class="form-label">Importo (€)</label>
+                                            <input type="number" step="0.01" class="form-control" id="rimborsoAmount" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="rimborsoType" class="form-label">Tipo Spesa</label>
+                                            <select class="form-select" id="rimborsoType" required>
+                                                <option value="">Seleziona...</option>
+                                                <option value="trasporto">Trasporto</option>
+                                                <option value="vitto">Vitto</option>
+                                                <option value="alloggio">Alloggio</option>
+                                                <option value="materiali">Materiali</option>
+                                                <option value="altro">Altro</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="rimborsoReceipt" class="form-label">Ricevuta</label>
+                                            <input type="file" class="form-control" id="rimborsoReceipt" accept=".pdf,.jpg,.jpeg,.png" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="material-icons">save</i> Invia Richiesta
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Section -->
+                <div id="adminSection" class="section-content" style="display: none;">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card shadow-sm">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="material-icons">admin_panel_settings</i> Pannello Amministrazione
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="card bg-primary text-white">
+                                                <div class="card-body text-center">
+                                                    <i class="material-icons mb-2" style="font-size: 48px;">group</i>
+                                                    <h5>Gestione Utenti</h5>
+                                                    <p>Visualizza e modifica utenti e permessi</p>
+                                                    <button class="btn btn-light" id="manageUsersBtn">
+                                                        <i class="material-icons">settings</i> Gestisci
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card bg-success text-white">
+                                                <div class="card-body text-center">
+                                                    <i class="material-icons mb-2" style="font-size: 48px;">receipt_long</i>
+                                                    <h5>Rimborsi in Sospeso</h5>
+                                                    <p id="pendingReimbursements">5 richieste in attesa</p>
+                                                    <button class="btn btn-light" id="reviewReimbursementsBtn">
+                                                        <i class="material-icons">check_circle</i> Rivedi
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card bg-info text-white">
+                                                <div class="card-body text-center">
+                                                    <i class="material-icons mb-2" style="font-size: 48px;">analytics</i>
+                                                    <h5>Report</h5>
+                                                    <p>Genera report mensili</p>
+                                                    <button class="btn btn-light" id="generateReportsBtn">
+                                                        <i class="material-icons">download</i> Genera
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Event Modal -->
+    <div class="modal fade" id="eventModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventModalTitle">
+                        <i class="material-icons">event</i> Evento
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="eventForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="eventTitle" class="form-label">Titolo</label>
+                                    <input type="text" class="form-control" id="eventTitle" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="eventType" class="form-label">Tipo Evento</label>
+                                    <select class="form-select" id="eventType" required>
+                                        <option value="">Seleziona...</option>
+                                        <option value="corso-interno">Corso Interno</option>
+                                        <option value="evento-pubblico">Evento Pubblico</option>
+                                        <option value="riunione">Riunione</option>
+                                        <option value="formazione">Formazione</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="eventDescription" class="form-label">Descrizione</label>
+                            <textarea class="form-control" id="eventDescription" rows="3"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="eventStart" class="form-label">Data/Ora Inizio</label>
+                                    <input type="datetime-local" class="form-control" id="eventStart" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="eventEnd" class="form-label">Data/Ora Fine</label>
+                                    <input type="datetime-local" class="form-control" id="eventEnd" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="eventLocation" class="form-label">Luogo</label>
+                                    <input type="text" class="form-control" id="eventLocation">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="eventFormatore" class="form-label">Formatore</label>
+                                    <select class="form-select" id="eventFormatore">
+                                        <option value="">Seleziona formatore...</option>
+                                        <!-- Popolato dinamicamente -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="eventId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" class="btn btn-danger" id="deleteEventBtn" style="display: none;">
+                        <i class="material-icons">delete</i> Elimina
+                    </button>
+                    <button type="submit" form="eventForm" class="btn btn-primary" id="saveEventBtn">
+                        <i class="material-icons">save</i> Salva
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
