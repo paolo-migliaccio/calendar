@@ -407,9 +407,3 @@ Verificare autenticazione utente
 - **Sistema**: Gestionale Calendario Formatori v1.0
 - **Ambiente**: Production-ready con MySQL + PHP
 - **Licenza**: Proprietaria per uso aziendale
-
----
-
-**🚀 Il sistema è ora pronto per il deployment su calendar.labcd.it!**
-
-Seguire la checklist di sicurezza e modificare tutte le password di default prima dell'utilizzo in produzione.
