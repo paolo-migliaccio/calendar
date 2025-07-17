@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestionale Calendario Formatori</title>
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Google Material Icons -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <!-- Material Design Lite -->
@@ -95,18 +99,28 @@
                 <div id="calendarSection" class="section-content">
                     <div class="row">
                         <div class="col-12">
-                            <div class="card shadow-sm">
+                            <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0">
-                                        <i class="material-icons">calendar_today</i> Calendario Eventi
+                                        <i class="material-icons">calendar_today</i> 
+                                        Calendario Eventi
                                     </h5>
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-outline-primary" id="addEventBtn">
-                                            <i class="material-icons">add</i> Nuovo Evento
+                                    <div class="d-flex gap-2">
+                                        <button type="button" class="btn btn-primary" id="addEventBtn">
+                                            <i class="material-icons">add</i> 
+                                            Nuovo Evento
                                         </button>
-                                        <button type="button" class="btn btn-outline-secondary" id="viewToggle">
-                                            <i class="material-icons">view_module</i> Vista
-                                        </button>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-outline-primary btn-sm" data-view="dayGridMonth">
+                                                <i class="material-icons">view_module</i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary btn-sm" data-view="timeGridWeek">
+                                                <i class="material-icons">view_week</i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary btn-sm" data-view="timeGridDay">
+                                                <i class="material-icons">view_day</i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -133,36 +147,57 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="card shadow-sm">
+                            <div class="card">
                                 <div class="card-header">
                                     <h5 class="mb-0">
-                                        <i class="material-icons">add_circle</i> Nuova Prenotazione
+                                        <i class="material-icons">add_circle</i> 
+                                        Nuova Prenotazione
                                     </h5>
                                 </div>
                                 <div class="card-body">
-                                    <form id="autoReservationForm">
+                                    <form id="autoReservationForm" class="needs-validation" novalidate>
                                         <div class="mb-3">
-                                            <label for="autoStartDate" class="form-label">Data Partenza</label>
+                                            <label for="autoStartDate" class="form-label">
+                                                <i class="material-icons" style="font-size: 16px; vertical-align: text-bottom;">schedule</i>
+                                                Data Partenza
+                                            </label>
                                             <input type="datetime-local" class="form-control" id="autoStartDate" required>
+                                            <div class="invalid-feedback">Inserisci data e ora di partenza</div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="autoEndDate" class="form-label">Data Rientro</label>
+                                            <label for="autoEndDate" class="form-label">
+                                                <i class="material-icons" style="font-size: 16px; vertical-align: text-bottom;">schedule</i>
+                                                Data Rientro
+                                            </label>
                                             <input type="datetime-local" class="form-control" id="autoEndDate" required>
+                                            <div class="invalid-feedback">Inserisci data e ora di rientro</div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="autoDestination" class="form-label">Destinazione</label>
-                                            <input type="text" class="form-control" id="autoDestination" required>
+                                            <label for="autoDestination" class="form-label">
+                                                <i class="material-icons" style="font-size: 16px; vertical-align: text-bottom;">place</i>
+                                                Destinazione
+                                            </label>
+                                            <input type="text" class="form-control" id="autoDestination" required placeholder="es. Milano, Via Roma 123">
+                                            <div class="invalid-feedback">Inserisci la destinazione</div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="autoNotes" class="form-label">Note</label>
-                                            <textarea class="form-control" id="autoNotes" rows="3"></textarea>
+                                            <label for="autoNotes" class="form-label">
+                                                <i class="material-icons" style="font-size: 16px; vertical-align: text-bottom;">note</i>
+                                                Note
+                                            </label>
+                                            <textarea class="form-control" id="autoNotes" rows="3" placeholder="Motivo della trasferta, dettagli aggiuntivi..."></textarea>
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="autoJustification" class="form-label">Giustificativo</label>
+                                        <div class="mb-4">
+                                            <label for="autoJustification" class="form-label">
+                                                <i class="material-icons" style="font-size: 16px; vertical-align: text-bottom;">attach_file</i>
+                                                Giustificativo (opzionale)
+                                            </label>
                                             <input type="file" class="form-control" id="autoJustification" accept=".pdf,.jpg,.jpeg,.png">
+                                            <div class="form-text">Formati supportati: PDF, JPG, PNG (max 5MB)</div>
                                         </div>
                                         <button type="submit" class="btn btn-primary w-100">
-                                            <i class="material-icons">save</i> Prenota Auto
+                                            <i class="material-icons">directions_car</i> 
+                                            Prenota Auto
                                         </button>
                                     </form>
                                 </div>

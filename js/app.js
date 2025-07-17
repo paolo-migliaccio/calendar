@@ -262,6 +262,18 @@ class CalendarioFormatori {
             }
         });
 
+        // Calendar view buttons
+        document.querySelectorAll('[data-view]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const view = e.currentTarget.getAttribute('data-view');
+                this.changeCalendarView(view);
+                
+                // Update button states
+                document.querySelectorAll('[data-view]').forEach(b => b.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+
         // User menu
         document.getElementById('logoutBtn').addEventListener('click', () => {
             this.logout();
@@ -348,12 +360,15 @@ class CalendarioFormatori {
     }
 
     /**
-     * Mostra una sezione specifica
+     * Mostra una sezione specifica con animazioni moderne
      */
     showSection(section) {
-        // Nascondi tutte le sezioni
+        // Rimuovi classe active dalle sezioni correnti
         document.querySelectorAll('.section-content').forEach(el => {
-            el.style.display = 'none';
+            el.classList.remove('active');
+            setTimeout(() => {
+                el.style.display = 'none';
+            }, 150);
         });
 
         // Rimuovi classe active dai menu
@@ -361,7 +376,7 @@ class CalendarioFormatori {
             el.classList.remove('active');
         });
 
-        // Mostra sezione selezionata
+        // Mostra sezione selezionata con animazione
         const sectionMap = {
             'calendar': 'calendarSection',
             'auto': 'autoSection',
@@ -371,7 +386,21 @@ class CalendarioFormatori {
 
         const sectionId = sectionMap[section];
         if (sectionId) {
-            document.getElementById(sectionId).style.display = 'block';
+            const sectionEl = document.getElementById(sectionId);
+            
+            setTimeout(() => {
+                sectionEl.style.display = 'block';
+                sectionEl.classList.add('fade-in-up');
+                
+                // Trigger reflow per l'animazione
+                sectionEl.offsetHeight;
+                sectionEl.classList.add('active');
+                
+                // Rimuovi classe animazione dopo completamento
+                setTimeout(() => {
+                    sectionEl.classList.remove('fade-in-up');
+                }, 500);
+            }, 150);
             
             // Aggiungi classe active al menu
             const menuId = 'menu' + section.charAt(0).toUpperCase() + section.slice(1);
@@ -380,10 +409,10 @@ class CalendarioFormatori {
 
         // Refresh calendari se necessario
         if (section === 'calendar' && this.calendar) {
-            setTimeout(() => this.calendar.render(), 100);
+            setTimeout(() => this.calendar.render(), 300);
         }
         if (section === 'auto' && this.autoCalendar) {
-            setTimeout(() => this.autoCalendar.render(), 100);
+            setTimeout(() => this.autoCalendar.render(), 300);
         }
     }
 
@@ -824,7 +853,19 @@ Generato il: ${new Date().toLocaleString('it-IT')}`;
     }
 
     /**
-     * Mostra notifica toast
+     * Cambia vista calendario
+     */
+    changeCalendarView(view) {
+        if (this.calendar) {
+            this.calendar.changeView(view);
+        }
+        if (this.autoCalendar) {
+            this.autoCalendar.changeView(view);
+        }
+    }
+
+    /**
+     * Mostra notifica toast moderna
      */
     showToast(message, type = 'info') {
         // Crea container se non esiste
@@ -835,25 +876,29 @@ Generato il: ${new Date().toLocaleString('it-IT')}`;
             document.body.appendChild(container);
         }
 
-        // Crea toast
+        // Crea toast con animazione moderna
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        toast.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        
         toast.innerHTML = `
             <div class="toast-body">
                 <i class="material-icons">${this.getToastIcon(type)}</i>
-                ${message}
+                <span>${message}</span>
             </div>
         `;
 
         container.appendChild(toast);
 
-        // Mostra toast
-        setTimeout(() => {
+        // Anima ingresso
+        requestAnimationFrame(() => {
             toast.style.opacity = '1';
             toast.style.transform = 'translateX(0)';
-        }, 100);
+        });
 
-        // Rimuovi toast dopo 4 secondi
+        // Rimuovi toast dopo 4 secondi con animazione
         setTimeout(() => {
             toast.style.opacity = '0';
             toast.style.transform = 'translateX(100%)';
